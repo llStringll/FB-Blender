@@ -11,4 +11,4 @@ Training regime:
 
 Predictive response length classifier for seq2seq part to put a hard constraint on generation of <eos> token, hasn't been added yet!
 
-*Training and eval scripts are yet to be added*
+*Training and eval scripts are under work*

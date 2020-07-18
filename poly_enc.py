@@ -81,8 +81,12 @@ class BertPolyModel(BertPreTrainedModel):
       mask = torch.eye(context_input_ids.size(0)).to(context_input_ids.device)
       loss = F.log_softmax(dot_product * 5, dim=-1) * mask
       loss = (-loss.sum(dim=1)).mean()
-
-      return loss
+      cos_similarity = (dot_product + 1) / 2
+      a=[]
+      for _ in cos_similarity[:]:
+          a.append(responses_input_ids[_.argmax()])
+      a = torch.stack(a)
+      return loss, a
     else:
       cos_similarity = (dot_product + 1) / 2
       return cos_similarity

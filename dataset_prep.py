@@ -32,7 +32,7 @@ class SelectionDataset(Dataset):
                 })
                 context = []
             if sample_cnt is not None and len(self.data_source) >= sample_cnt:
-              break                
+              break
     def __len__(self):
         return len(self.data_source)
 
@@ -87,30 +87,44 @@ class SelectionDataset(Dataset):
              responses_token_ids_list_batch, responses_segment_ids_list_batch, responses_input_masks_list_batch, labels_batch
 
     def batchify_join_str(self, batch):
-      contexts_token_ids_list_batch, contexts_segment_ids_list_batch, contexts_input_masks_list_batch, \
-      responses_token_ids_list_batch, responses_segment_ids_list_batch, responses_input_masks_list_batch = [], [], [], [], [], []
+      contexts_token_ids_list_batchPE, contexts_segment_ids_list_batchPE, contexts_input_masks_list_batchPE, \
+      responses_token_ids_list_batchPE, responses_segment_ids_list_batchPE, responses_input_masks_list_batchPE = [], [], [], [], [], []
+      contexts_token_ids_list_batchGE, contexts_segment_ids_list_batchGE, contexts_input_masks_list_batchGE, \
+      responses_token_ids_list_batchGE, responses_segment_ids_list_batchGE, responses_input_masks_list_batchGE = [], [], [], [], [], []
       labels_batch = []
       for sample in batch:
-        (contexts_token_ids_list, contexts_segment_ids_list, contexts_input_masks_list), \
-        (responses_token_ids_list, responses_segment_ids_list, responses_input_masks_list, _) = sample[:2]
+        (contexts_token_ids_listPE, contexts_segment_ids_listPE, contexts_input_masks_listPE, contexts_token_ids_listGE, contexts_segment_ids_listGE, contexts_input_masks_listGE), \
+        (responses_token_ids_listPE, responses_segment_ids_listPE, responses_input_masks_listPE, responses_token_ids_listGE, responses_segment_ids_listGE, responses_input_masks_listGE, _) = sample[:2]
 
-        contexts_token_ids_list_batch.append(contexts_token_ids_list)
-        contexts_segment_ids_list_batch.append(contexts_segment_ids_list)
-        contexts_input_masks_list_batch.append(contexts_input_masks_list)
+        contexts_token_ids_list_batchPE.append(contexts_token_ids_listPE)
+        contexts_segment_ids_list_batchPE.append(contexts_segment_ids_listPE)
+        contexts_input_masks_list_batchPE.append(contexts_input_masks_listPE)
+        contexts_token_ids_list_batchGE.append(contexts_token_ids_listGE)
+        contexts_segment_ids_list_batchGE.append(contexts_segment_ids_listGE)
+        contexts_input_masks_list_batchGE.append(contexts_input_masks_listGE)
 
-        responses_token_ids_list_batch.append(responses_token_ids_list)
-        responses_segment_ids_list_batch.append(responses_segment_ids_list)
-        responses_input_masks_list_batch.append(responses_input_masks_list)
+        responses_token_ids_list_batchPE.append(responses_token_ids_listPE)
+        responses_segment_ids_list_batchPE.append(responses_segment_ids_listPE)
+        responses_input_masks_list_batchPE.append(responses_input_masks_listPE)
+        responses_token_ids_list_batchGE.append(responses_token_ids_listGE)
+        responses_segment_ids_list_batchGE.append(responses_segment_ids_listGE)
+        responses_input_masks_list_batchGE.append(responses_input_masks_listGE)
 
         labels_batch.append(sample[-1])
 
-      long_tensors = [contexts_token_ids_list_batch, contexts_segment_ids_list_batch, contexts_input_masks_list_batch,
-                      responses_token_ids_list_batch, responses_segment_ids_list_batch, responses_input_masks_list_batch]
+      long_tensors = [contexts_token_ids_list_batchPE, contexts_segment_ids_list_batchPE, contexts_input_masks_list_batchPE,
+                      contexts_token_ids_list_batchGE, contexts_segment_ids_list_batchGE, contexts_input_masks_list_batchGE,
+                      responses_token_ids_list_batchPE, responses_segment_ids_list_batchPE, responses_input_masks_list_batchPE,
+                      responses_token_ids_list_batchGE, responses_segment_ids_list_batchGE, responses_input_masks_list_batchGE]
 
-      contexts_token_ids_list_batch, contexts_segment_ids_list_batch, contexts_input_masks_list_batch, \
-      responses_token_ids_list_batch, responses_segment_ids_list_batch, responses_input_masks_list_batch = (
+      contexts_token_ids_list_batchPE, contexts_segment_ids_list_batchPE, contexts_input_masks_list_batchPE, \
+      contexts_token_ids_list_batchGE, contexts_segment_ids_list_batchGE, contexts_input_masks_list_batchGE, \
+      responses_token_ids_list_batchPE, responses_segment_ids_list_batchPE, responses_input_masks_list_batchPE, \
+      responses_token_ids_list_batchGE, responses_segment_ids_list_batchGE, responses_input_masks_list_batchGE = (
         torch.tensor(t, dtype=torch.long) for t in long_tensors)
 
       labels_batch = torch.tensor(labels_batch, dtype=torch.long)
-      return contexts_token_ids_list_batch, contexts_segment_ids_list_batch, contexts_input_masks_list_batch, \
-             responses_token_ids_list_batch, responses_segment_ids_list_batch, responses_input_masks_list_batch, labels_batch
+      return contexts_token_ids_list_batchPE, contexts_segment_ids_list_batchPE, contexts_input_masks_list_batchPE, \
+             contexts_token_ids_list_batchGE, contexts_segment_ids_list_batchGE, contexts_input_masks_list_batchGE, \
+             responses_token_ids_list_batchPE, responses_segment_ids_list_batchPE, responses_input_masks_list_batchPE, \
+             responses_token_ids_list_batchGE, responses_segment_ids_list_batchGE, responses_input_masks_list_batchGE, labels_batch
